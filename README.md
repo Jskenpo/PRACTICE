@@ -3,7 +3,8 @@
 Esta carpeta entrega **solo la infraestructura y los datos**. PostgreSQL ya
 tiene tablas y registros; Redis queda listo para la cola. `main.py` y
 `requirements.txt` están vacíos para que implementes la API con FastAPI.
-El contexto del caso está en `resumen.md`.
+El contexto del caso está en `resumen.md`. La descripción completa de tablas,
+columnas, tipos y relaciones está en `db/SCHEMA.md`.
 
 ## Levantar la base de datos
 
