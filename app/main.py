@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from time import perf_counter
 
-#from routes import testrouter, conversation_router, agents_router, admin_router, users_router
-
+from app.routes import products_routes
 load_dotenv()
 
 app = FastAPI(
@@ -22,17 +21,7 @@ app.add_middleware(
 
 
 
-
-app.include_router(testrouter.router, prefix="/test", tags=["test"])
-
-app.include_router(conversation_router, prefix="/conversations", tags=["conversations"])
-
-app.include_router(agents_router, prefix="/agents", tags=["agents"])
-
-app.include_router(admin_router, prefix="/admin", tags=["admin"])
-
-app.include_router(users_router, prefix="/users", tags=["users"])
-
+app.include_router(products_routes.router, prefix="/products", tags=["Products"])
 
 
 
