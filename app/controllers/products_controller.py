@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from uuid import UUID
 from app.repositories.products_repo import get_products as repo_get_products
 from app.repositories.products_repo import get_product_by_id as repo_get_product_by_id
 from app.repositories.products_repo import create_product as repo_create_product
@@ -12,12 +13,12 @@ def count_products():
     return {"total_products": total_products}
 
 
-def create_product(name: str, price: float):
+def create_product(name: str, price: int):
     """Crea un nuevo producto en la base de datos.""" 
     repo_create_product(name, price)
 
 
-def get_product_by_id(product_id: int):
+def get_product_by_id(product_id: UUID):
     """Obtiene un producto por su ID."""
     product = repo_get_product_by_id(product_id)
     if not product:

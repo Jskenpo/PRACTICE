@@ -1,8 +1,8 @@
 # Ejercicio: construye tú la API
 
-Esta carpeta entrega **solo la infraestructura y los datos**. PostgreSQL ya
-tiene tablas y registros; Redis queda listo para la cola. `main.py` y
-`requirements.txt` están vacíos para que implementes la API con FastAPI.
+Esta carpeta comenzó con la infraestructura y los datos. PostgreSQL ya
+tiene tablas y registros; Redis queda listo para la cola. La API de productos
+está en desarrollo y ya están implementados `POST /auth/login` y `GET /auth/me`.
 El contexto del caso está en `resumen.md`. La descripción completa de tablas,
 columnas, tipos y relaciones está en `db/SCHEMA.md`.
 
@@ -24,6 +24,7 @@ docker compose up -d
 ```
 
 La contraseña de PostgreSQL está en el `.env` local (no se sube a Git).
+Ese archivo también contiene `JWT_SECRET_KEY`, la clave para firmar tokens.
 
 | Servicio | Desde tu computadora | Desde otro servicio del mismo Compose |
 | --- | --- | --- |
@@ -42,6 +43,13 @@ La primera consulta debe devolver **cero filas**. El seed tiene 3 usuarios,
 6 productos, 4 pedidos, 6 líneas, 12 movimientos y 1 trabajo de comprobante.
 Los usuarios `ana`, `luis` y `admin` usan la contraseña de prueba
 `Demo12345!`, guardada como hash bcrypt. Los precios están en centavos.
+
+## Probar la autenticación
+
+`POST /auth/login` recibe `username` y `password` como datos de formulario y
+devuelve `access_token` y `token_type`. El token dura 30 minutos. En `/docs`
+puedes iniciar sesión desde el botón **Authorize**; también puedes enviarlo
+en el encabezado `Authorization: Bearer <token>` a `GET /auth/me`.
 
 ## Contrato que debes implementar
 
@@ -106,5 +114,4 @@ Prueba al menos:
 Cuando termines, revisaré el contrato HTTP y la validación; autenticación y
 acceso por usuario; transacción, precio histórico y concurrencia; integración
 real de Redis y worker; y pruebas que demuestren estos comportamientos. Te
-daré fallos concretos, su gravedad y cómo reproducirlos. No he implementado
-ningún endpoint ni worker en esta entrega.
+daré fallos concretos, su gravedad y cómo reproducirlos.

@@ -21,7 +21,7 @@ def read_product(product_id: UUID):
     return get_product_by_id(product_id)
 
 @router.post("/")
-def add_product(name: str, price: float):
+def add_product(name: str, price: int):
     """Crea un nuevo producto."""
     create_product(name, price)
     return {"message": "Producto creado exitosamente"}

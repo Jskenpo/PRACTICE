@@ -1,48 +1,44 @@
-from jose import jwt
+import os
+from datetime import datetime, timedelta, timezone
+
+from dotenv import load_dotenv
+from jose import JWTError, ExpiredSignatureError, jwt
 from fastapi import HTTPException, status
 
+load_dotenv()
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("JWT_SECRET_KEY no está configurada en .env")
 
-def generate_jwt_token(payload: dict, secret_key: str, algorithm: str = "HS256") -> str:
-    """
-    Generate a JWT token.
+ALGORITHM = "HS256"
+TOKEN_LIFETIME = timedelta(minutes=30)
 
-    Args:
-        payload (dict): The payload to encode in the JWT.
-        secret_key (str): The secret key used to sign the JWT.
-        algorithm (str): The algorithm used for signing the JWT. Default is "HS256".
 
-    Returns:
-        str: The generated JWT token.
-    """
-    return jwt.encode(payload, secret_key, algorithm=algorithm)
+def generate_jwt_token(user_id: str) -> str:
+    """Firma un token que identifica al usuario y vence en 30 minutos."""
+    payload = {
+        "sub": user_id,
+        "exp": datetime.now(timezone.utc) + TOKEN_LIFETIME,
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
-def decode_jwt_token(token: str, secret_key: str, algorithms: list = ["HS256"]) -> dict:
-    """
-    Decode a JWT token.
 
-    Args:
-        token (str): The JWT token to decode.
-        secret_key (str): The secret key used to verify the JWT.
-        algorithms (list): A list of algorithms to use for decoding. Default is ["HS256"].
-
-    Returns:
-        dict: The decoded payload from the JWT.
-
-    Raises:
-        HTTPException: If the token is invalid or expired.
-    """
+def decode_jwt_token(token: str) -> dict:
+    """Valida la firma, el algoritmo y la expiración del token."""
     try:
-        payload = jwt.decode(token, secret_key, algorithms=algorithms)
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("exp") is None:
+            raise JWTError("Missing expiration")
         return payload
-    except jwt.ExpiredSignatureError:
+    except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
+            detail="Token vencido",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    except jwt.JWTError:
+    except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+            detail="Token inválido",
             headers={"WWW-Authenticate": "Bearer"},
         )

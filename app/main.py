@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from time import perf_counter
 
-from app.routes import products_routes
+from app.routes import auth_routes, products_routes
 load_dotenv()
 
 app = FastAPI(
@@ -22,6 +22,7 @@ app.add_middleware(
 
 
 app.include_router(products_routes.router, prefix="/products", tags=["Products"])
+app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 
 
 
