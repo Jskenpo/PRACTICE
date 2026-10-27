@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL, Engine
+from contextlib import contextmanager
 
 
 load_dotenv()
@@ -24,7 +25,8 @@ database_url = URL.create(
 
 engine: Engine = create_engine(database_url)
 
-async def get_db_connection():
+@contextmanager
+def get_db_connection():
     """Obtiene una conexión a la base de datos."""
     with engine.connect() as connection:
         yield connection
