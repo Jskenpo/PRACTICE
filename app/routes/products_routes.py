@@ -1,5 +1,6 @@
 from fastapi   import APIRouter, HTTPException, Depends
 from app.controllers.products_controller import get_products, get_product_by_id, create_product, count_products
+from app.controllers.auth_controller import require_admin
 from uuid import UUID
 
 router = APIRouter()
@@ -20,7 +21,7 @@ def read_product(product_id: UUID):
     """Obtiene un producto por su ID."""
     return get_product_by_id(product_id)
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(require_admin)])
 def add_product(name: str, price: int):
     """Crea un nuevo producto."""
     create_product(name, price)

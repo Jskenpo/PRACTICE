@@ -50,6 +50,9 @@ Los usuarios `ana`, `luis` y `admin` usan la contraseña de prueba
 devuelve `access_token` y `token_type`. El token dura 30 minutos. En `/docs`
 puedes iniciar sesión desde el botón **Authorize**; también puedes enviarlo
 en el encabezado `Authorization: Bearer <token>` a `GET /auth/me`.
+Los roles guardados en `users.role` son `customer` y `admin`. Crear un producto
+con `POST /products/` requiere un token de `admin`: sin token devuelve 401 y
+con token de `customer` devuelve 403.
 
 ## Contrato que debes implementar
 
